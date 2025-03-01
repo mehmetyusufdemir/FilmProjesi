@@ -13,7 +13,12 @@
         <input type="number" name="yapimYili" class="form-control" required />
 
         <label>Oyuncular:</label>
-        <input type="text" name="oyuncular" class="form-control" required />
+        <div id="oyuncularListesi">
+            <input type="text" id="oyuncu" class="form-control" placeholder="Oyuncu Adı" />
+            <button type="button" class="btn btn-primary mt-2" onclick="OyuncuEkle()">Ekle</button>
+            <ul id="oyuncular"></ul>
+        </div>
+        <input type="hidden" name="oyuncular" id="oyuncularHidden" required />
 
         <label>IMDB Puanı:</label>
         <input type="number" step="0.1" name="imdbPuani" class="form-control" required />
@@ -40,7 +45,7 @@
                     <td>@film.FilmAdiIng</td>
                     <td>@film.YapimYili</td>
                     <td>@film.Oyuncular</td>
-                    <td>@film.ImdbPuani</td>
+                    <td>@film.ImdbPuani.ToString("0.0")</td>
                 </tr>
             }
         </tbody>
@@ -53,3 +58,29 @@
         </form>
     }
 </div>
+
+<script>
+let oyuncularListesi = [];
+
+function OyuncuEkle() {
+    let oyuncuAdi = document.getElementById("oyuncu").value;
+    if (oyuncuAdi.trim() !== "") {
+        oyuncularListesi.push(oyuncuAdi);
+        document.getElementById("oyuncu").value = "";
+        ListeyiGuncelle();
+    }
+}
+
+function ListeyiGuncelle() {
+    let liste = document.getElementById("oyuncular");
+    liste.innerHTML = "";
+
+    oyuncularListesi.forEach(function (oyuncu) {
+        let li = document.createElement("li");
+        li.textContent = oyuncu;
+        liste.appendChild(li);
+    });
+
+    document.getElementById("oyuncularHidden").value = oyuncularListesi.join(",");
+}
+</script>

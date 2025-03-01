@@ -15,19 +15,23 @@ namespace FilmProjesi.Controllers
         }
 
         [HttpPost]
-        public IActionResult FilmEkle(string filmAdi, string filmAdiIng, int yapimYili, string oyuncular, double imdbPuani)
+        public IActionResult FilmEkle(string filmAdi, string filmAdiIng, int yapimYili, string oyuncular, string imdbPuani)
+{
+    if (double.TryParse(imdbPuani.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture, out double puan))
+    {
+        Filmler.Add(new Film
         {
-            Filmler.Add(new Film
-            {
-                FilmAdi = filmAdi,
-                FilmAdiIng = filmAdiIng,
-                YapimYili = yapimYili,
-                Oyuncular = oyuncular,
-                ImdbPuani = imdbPuani
-            });
+            FilmAdi = filmAdi,
+            FilmAdiIng = filmAdiIng,
+            YapimYili = yapimYili,
+            Oyuncular = oyuncular,
+            ImdbPuani = puan
+        });
+    }
 
-            return RedirectToAction("Index");
-        }
+    return RedirectToAction("Index");
+}
+
 
         public IActionResult ExcelIndir()
         {
@@ -51,7 +55,7 @@ namespace FilmProjesi.Controllers
                     sheet.Cells[i + 2, 2].Value = Filmler[i].FilmAdiIng;
                     sheet.Cells[i + 2, 3].Value = Filmler[i].YapimYili;
                     sheet.Cells[i + 2, 4].Value = Filmler[i].Oyuncular;
-                    sheet.Cells[i + 2, 5].Value = Filmler[i].ImdbPuani;
+                    sheet.Cells[i + 2, 5].Value = Filmler[i].ImdbPuani.ToString("0.0"); // Ondalıklı gösterim
                 }
 
                 var stream = new MemoryStream();
